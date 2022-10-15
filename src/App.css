@@ -1,38 +1,36 @@
-.App {
-  text-align: center;
+.direct:hover {
+    border: none;
+    color: #0d6efd;
+    background-color: white;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.direct {
+    border: none;
+    background-color: white;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.description-wrapper {
+    height: 100px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.description-text {
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
-.App-link {
-  color: #61dafb;
+.recipe-image {
+    width: 60vh;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.card-wrapper:hover {
+    transform: scale(1.01);
+}
+
+.profile-wrapper {
+    margin: auto
 }
