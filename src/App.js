@@ -13,7 +13,7 @@ import Recipe from "./components/Recipe";
 import RecipeByUser from "./components/Dashboard/RecipeByUser";
 import Reset from "./components/Auth/Reset";
 import Signup from "./components/Auth/Signup";
-export const CLIENT_URL = "https://localhost:3000";
+export const CLIENT_URL = "https://kitchen-recipe-management-fe.netlify.app";
 export const url = "https://kitchen-recipe-management-be.herokuapp.com";
 export const searchContext = createContext();
 

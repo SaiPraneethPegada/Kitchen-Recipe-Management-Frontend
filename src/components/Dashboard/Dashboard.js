@@ -1,10 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import Navbar from "../Navbar";
 
 function Dashboard() {
   const token = sessionStorage.getItem("token");
-  const navigate = useNavigate();
 
   return (
     <>
