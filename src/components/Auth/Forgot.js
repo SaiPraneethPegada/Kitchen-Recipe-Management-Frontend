@@ -10,6 +10,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Spinner from "react-bootstrap/Spinner";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TopBar from "./TopBar";
 
@@ -17,21 +18,26 @@ const theme = createTheme();
 
 export default function Forgot() {
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
   //   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
-    console.log(email);
-
-    let res = await axios.post(`${url}/forgot_password`, { email: email });
-
-    console.log(res.data);
-
-    if (res.data.statusCode === 200) {
-      alert(res.data.message);
+    // console.log(email);
+    if (email !== "") {
+      let res = await axios.post(`${url}/forgot_password`, { email: email });
+      // console.log(res.data);
+      if (res.data.statusCode === 200) {
+        alert(res.data.message);
+      } else {
+        alert(res.data.message);
+      }
     } else {
-      alert(res.data.message);
+      alert("Kindly enter your registered email");
     }
+    setLoading(false);
   };
 
   return (
@@ -78,7 +84,11 @@ export default function Forgot() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Submit
+                {loading ? (
+                  <Spinner animation="border" variant="light" />
+                ) : (
+                  "Submit"
+                )}
               </Button>
             </Box>
             {/* <Grid container >

@@ -14,7 +14,7 @@ function AddRecipe() {
   const [image, setImage] = useState("");
 
   const { id } = useParams();
-  console.log(id);
+  // console.log(id);
 
   const token = sessionStorage.getItem("token");
 
@@ -22,7 +22,7 @@ function AddRecipe() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(recipeName, description, ingredients, instructions, image);
+    // console.log(recipeName, description, ingredients, instructions, image);
 
     // TODO: ingredients convert into array
 
@@ -35,7 +35,7 @@ function AddRecipe() {
     ) {
       if (id) {
         let array = ingredients.split(",");
-        console.log(array);
+        // console.log(array);
         let result = await axios.put(
           `${url}/users/updateRecipe/${id}`,
           {
@@ -56,13 +56,13 @@ function AddRecipe() {
         if (result.data.statusCode === 200) {
           alert(result.data.message);
           navigate("/userRecipes");
-          console.log(result.data);
+          // console.log(result.data);
         } else {
           alert(result.data.message);
         }
       } else {
         let array = ingredients.split(",");
-        console.log(array);
+        // console.log(array);
         let res = await axios.post(
           `${url}/users/addRecipe`,
           {
@@ -83,7 +83,7 @@ function AddRecipe() {
         if (res.data.statusCode === 200) {
           alert("Recipe Posted Successfully!");
           navigate("/userRecipes");
-          console.log(res.data.addRecipe);
+          // console.log(res.data.addRecipe);
         } else {
           alert(res.data.message);
         }
@@ -98,14 +98,13 @@ function AddRecipe() {
       fetch(`${url}/users/recipe/${id}`)
         .then((data) => data.json())
         .then((res) => {
-          console.log(res.recipe);
           setRecipeName(res.recipe.recipeName);
           setDescription(res.recipe.description);
           setIngredients(res.recipe.ingredients);
           setInstructions(res.recipe.instructions);
           setImage(res.recipe.image);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => alert(err));
     }
   }, [id]);
 

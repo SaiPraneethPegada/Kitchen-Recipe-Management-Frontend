@@ -1,8 +1,7 @@
-import React from "react";
-import { url } from "../../App";
+import axios from "axios";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
-
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,8 +12,14 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import axios from "axios";
+import Spinner from "react-bootstrap/Spinner";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Visibility from "@mui/icons-material/Visibility";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+
 import TopBar from "./TopBar";
+import { url } from "../../App";
 
 const theme = createTheme();
 
@@ -25,6 +30,11 @@ const initialValues = {
 };
 
 export default function Signup() {
+  const [loading, setLoading] = useState(false);
+  const [showPw, setShowPw] = useState(false);
+
+  const togglePw = () => setShowPw(!showPw);
+
   const navigate = useNavigate();
   const validate = (values) => {
     const errors = {};
@@ -53,6 +63,7 @@ export default function Signup() {
     initialValues,
     validate,
     onSubmit: async (values) => {
+      setLoading(true);
       let res = await axios.post(`${url}/signup`, {
         userName: values.userName,
         email: values.email,
@@ -65,6 +76,7 @@ export default function Signup() {
       } else {
         alert(res.data.message);
       }
+      setLoading(false);
     },
   });
 
@@ -129,13 +141,26 @@ export default function Signup() {
                 fullWidth
                 name="password"
                 label="Password"
-                type="password"
+                type={showPw ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={togglePw}
+                        edge="end"
+                      >
+                        {showPw ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
                 id="password"
                 error={
                   formik.touched.password && Boolean(formik.errors.password)
                 }
                 helperText={formik.touched.password && formik.errors.password}
-                values={formik.values.password}
+                value={formik.values.password}
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
               />
@@ -145,7 +170,11 @@ export default function Signup() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Register
+                {loading ? (
+                  <Spinner animation="border" variant="light" />
+                ) : (
+                  "Register"
+                )}
               </Button>
 
               <Grid container>

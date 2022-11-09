@@ -1,5 +1,6 @@
+import axios from "axios";
 import React, { useState } from "react";
-
+import { useNavigate, useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -7,22 +8,31 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import axios from "axios";
+import Spinner from "react-bootstrap/Spinner";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import Visibility from "@mui/icons-material/Visibility";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+
 import { url } from "../../App";
-import { useNavigate, useParams } from "react-router-dom";
 
 const theme = createTheme();
 
 export default function Reset() {
   const [password, setPassword] = useState("");
   const [cf_password, setCf_password] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showPw, setShowPw] = useState(false);
 
   const { accessToken } = useParams();
   const navigate = useNavigate();
 
+  const togglePw = () => setShowPw(!showPw);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(password, cf_password);
+    setLoading(true);
+    // console.log(password, cf_password);
 
     if (password.length < 8) {
       alert("Password must be at least 8 characters");
@@ -43,6 +53,7 @@ export default function Reset() {
     } else {
       alert("Both Passwords should match");
     }
+    setLoading(false);
   };
 
   return (
@@ -75,6 +86,7 @@ export default function Reset() {
                 label="Password"
                 name="password"
                 type="password"
+                value={password}
                 autoFocus
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -85,7 +97,21 @@ export default function Reset() {
                 id="cf_password"
                 label="Confirm Password"
                 name="cf_password"
-                type="password"
+                value={cf_password}
+                type={showPw ? "text" : "password"}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={togglePw}
+                        edge="end"
+                      >
+                        {showPw ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
                 onChange={(e) => setCf_password(e.target.value)}
               />
 
@@ -95,7 +121,11 @@ export default function Reset() {
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
               >
-                Submit
+                {loading ? (
+                  <Spinner animation="border" variant="light" />
+                ) : (
+                  "Submit"
+                )}
               </Button>
             </Box>
           </Box>

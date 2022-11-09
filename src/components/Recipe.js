@@ -8,7 +8,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 
 import Navbar from "./Navbar";
-import {CLIENT_URL} from '../App';
+import { CLIENT_URL } from "../App";
 import { url } from "../App";
 import "../App.css";
 
@@ -29,14 +29,14 @@ function Recipe() {
       setRecipe(res.data.recipe);
       setComments(res.data.recipe.comments);
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
     setLoading(false);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(comment);
+    // console.log(comment);
     try {
       const res = await axios.patch(
         `${url}/users/addComment/${id}`,
@@ -54,7 +54,7 @@ function Recipe() {
         alert("Error adding comment");
       }
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
 
@@ -63,8 +63,8 @@ function Recipe() {
     alert(`Copied to ClipBoard URL - \n ${CLIENT_URL + location.pathname}`);
   };
 
-  console.log(recipe);
-  console.log(comments);
+  // console.log(recipe);
+  // console.log(comments);
 
   useEffect(() => {
     getRecipe();

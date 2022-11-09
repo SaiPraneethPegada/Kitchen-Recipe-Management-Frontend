@@ -1,33 +1,23 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import Navbar from "../Navbar";
-import { url } from "../../App";
+import Spinner from "react-bootstrap/Spinner";
+import { url, profileContext } from "../../App";
 import "../../App.css";
 
 export default function Profile() {
   const token = sessionStorage.getItem("token");
-  const [profile, setProfile] = useState([]);
   const [userName, setUserName] = useState("");
   const [nameEdit, setNameEdit] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { profile, getProfile } = useContext(profileContext);
 
-  const getProfile = async () => {
-    const res = await axios.get(`${url}/profile`, {
-      headers: {
-        Authorization: `${token}`,
-      },
-    });
-    if (res.data.statusCode === 200) {
-      setProfile(res.data.user);
-      setUserName(res.data.user.userName);
-      console.log(res.data.user);
-    } else {
-      console.log("Error while fetching profile");
-    }
-  };
+  // console.log(profile);
 
   const handleSubmit = async () => {
-    console.log(userName);
+    // console.log(userName);
+    setLoading(true);
     const update = await axios.put(
       `${url}/updateProfile`,
       {
@@ -39,7 +29,7 @@ export default function Profile() {
         },
       }
     );
-    console.log(update);
+    // console.log(update);
     if (update.data.statusCode === 200) {
       alert("Profile updated successfully");
       setUserName("");
@@ -48,14 +38,16 @@ export default function Profile() {
     } else {
       alert(update.data.message);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
+    setUserName(profile.userName);
     getProfile();
     // eslint-disable-next-line
-  }, []);
+  }, [profile?.userName]);
 
-  console.log(profile);
+  // console.log(profile);
 
   if (!token) return <div> Please Login...</div>;
 
@@ -110,8 +102,15 @@ export default function Profile() {
           </Table>
 
           {nameEdit ? (
-            <button className="btn btn-warning" onClick={() => handleSubmit()}>
-              Update Profile
+            <button
+              className="btn btn-warning mt-1 mb-3"
+              onClick={() => handleSubmit()}
+            >
+              {loading ? (
+                <Spinner animation="border" variant="light" />
+              ) : (
+                "Update Profile"
+              )}
             </button>
           ) : (
             <button

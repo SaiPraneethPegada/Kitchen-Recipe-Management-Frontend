@@ -8,13 +8,15 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import Typography from "@mui/material/Typography";
 import { styled, alpha } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import Toolbar from "@mui/material/Toolbar";
-import { searchContext } from "../App";
+import decode from "jwt-decode";
+
+import { searchContext, profileContext } from "../App";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -57,6 +59,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function Navbar() {
+  const [userName, setUserName] = useState("");
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -65,12 +69,9 @@ export default function Navbar() {
 
   const navigate = useNavigate();
   const context = useContext(searchContext);
+  const { profile, getProfile } = useContext(profileContext);
 
   const token = sessionStorage.getItem("token");
-  const user = sessionStorage.getItem("user");
-  const userDetails = JSON.parse(user);
-  const userName = userDetails.userName;
-  //console.log(token);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -107,7 +108,7 @@ export default function Navbar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={() => navigate("/profile")}>Profile</MenuItem>
-      <MenuItem onClick={() => navigate("/dashboard")}>My account</MenuItem>
+      <MenuItem onClick={() => navigate("/favorites")}>Favorites</MenuItem>
     </Menu>
   );
 
@@ -194,6 +195,25 @@ export default function Navbar() {
       )}
     </Menu>
   );
+
+  const logout = () => {
+    navigate("/");
+    sessionStorage.clear();
+  };
+
+  useEffect(() => {
+    if (token) {
+      setUserName(profile.userName);
+      getProfile();
+
+      const decodeToken = decode(token);
+      if (Math.round(+new Date() / 1000) > decodeToken.exp) {
+        logout();
+        alert("Session Expired! Please Login to continue");
+      }
+    }
+    // eslint-disable-next-line
+  }, [token, profile?.userName]);
 
   return (
     <Box sx={{ flexGrow: 1 }} className="sticky-top">

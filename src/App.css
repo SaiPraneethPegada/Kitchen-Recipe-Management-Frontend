@@ -34,3 +34,10 @@
 .profile-wrapper {
     margin: auto
 }
+
+.toast_wrapper {
+    position: absolute;
+    right: 10px;
+    top: 70px;
+    z-index: 1;
+}
