@@ -1,22 +1,25 @@
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import InputBase from "@mui/material/InputBase";
+import { AccountCircle } from "@mui/icons-material";
+import {
+  AppBar,
+  Box,
+  Button,
+  IconButton,
+  InputBase,
+  MenuItem,
+  Menu,
+  Typography,
+  Toolbar,
+  Tooltip,
+} from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import Typography from "@mui/material/Typography";
 import { styled, alpha } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
-import Toolbar from "@mui/material/Toolbar";
 import decode from "jwt-decode";
 
-import { searchContext, profileContext } from "../App";
+import { RecipeState } from "../context/RecipesProvider";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -68,8 +71,8 @@ export default function Navbar() {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const navigate = useNavigate();
-  const context = useContext(searchContext);
-  const { profile, getProfile } = useContext(profileContext);
+  // const { profile, getProfile } = useContext(profileContext);
+  const { profile, getProfile, searchTerm, setSearchTerm } = RecipeState();
 
   const token = sessionStorage.getItem("token");
 
@@ -236,8 +239,8 @@ export default function Navbar() {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
-              value={context.searchTerm}
-              onChange={(e) => context.setSearchTerm(e.target.value)}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </Search>
           <Box sx={{ flexGrow: 1 }} />
@@ -286,28 +289,32 @@ export default function Navbar() {
                     Add Recipe
                   </Button>
                 </MenuItem>
-                <IconButton
-                  size="small"
-                  edge="end"
-                  aria-label="account of current user"
-                  aria-controls={menuId}
-                  aria-haspopup="true"
-                  onClick={handleProfileMenuOpen}
-                  color="inherit"
-                >
-                  <AccountCircle />
-                  <span className="mx-1">{userName}</span>
-                </IconButton>
-                <MenuItem>
+                <Tooltip title="Profile">
                   <IconButton
+                    size="small"
+                    edge="end"
+                    aria-label="account of current user"
+                    aria-controls={menuId}
+                    aria-haspopup="true"
+                    onClick={handleProfileMenuOpen}
                     color="inherit"
-                    onClick={() => {
-                      sessionStorage.clear();
-                      navigate("/signin");
-                    }}
                   >
-                    <LogoutIcon />
+                    <AccountCircle />
+                    <span className="mx-1">{userName}</span>
                   </IconButton>
+                </Tooltip>
+                <MenuItem>
+                  <Tooltip title="Logout">
+                    <IconButton
+                      color="inherit"
+                      onClick={() => {
+                        sessionStorage.clear();
+                        navigate("/signin");
+                      }}
+                    >
+                      <LogoutIcon />
+                    </IconButton>
+                  </Tooltip>
                 </MenuItem>
               </>
             )}

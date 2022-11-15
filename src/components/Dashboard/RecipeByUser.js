@@ -1,39 +1,39 @@
 import axios from "axios";
 import ArrowCircleRightIcon from "@mui/icons-material/ArrowCircleRight";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import EditIcon from "@mui/icons-material/Edit";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import EditIcon from "@mui/icons-material/Edit";
 import IconButton from "@mui/material/IconButton";
-import moment from "moment";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { red } from "@mui/material/colors";
 import Typography from "@mui/material/Typography";
-import React, { useState, useEffect, useContext } from "react";
+import { red } from "@mui/material/colors";
+import moment from "moment";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Navbar from "../Navbar";
-import { searchContext } from "../../App";
 import { url } from "../../App";
+import { RecipeState } from "../../context/RecipesProvider";
 
 function RecipeByUser() {
-  const [recipes, setRecipes] = useState([]);
+  // const [recipes, setRecipes] = useState([]);
+  const [loading, setLoading] = useState(false);
   const token = sessionStorage.getItem("token");
   const user = sessionStorage.getItem("user");
   const userDetails = JSON.parse(user);
   const tokenUser = userDetails.id;
   const navigate = useNavigate();
-  const { searchTerm } = useContext(searchContext);
+  const { searchTerm, recipes, setRecipes } = RecipeState();
 
   const getRecipes = async () => {
     if (tokenUser) {
-      const res = await axios.get(`${url}/users/allRecipes`);
-      const data = res.data.recipes;
-      const userRecipes = data.filter(
+      setLoading(true);
+      const userRecipes = recipes.filter(
         (recipes) => recipes.userId === tokenUser
       );
       setRecipes(userRecipes);
@@ -41,6 +41,7 @@ function RecipeByUser() {
       alert("Token Invalid/Expired");
       navigate("/signin");
     }
+    setLoading(false);
   };
 
   const handleDelete = async (id) => {
@@ -68,13 +69,14 @@ function RecipeByUser() {
   }, []);
 
   if (!tokenUser) return <div> Please Login...</div>;
+  if (loading) return <div>Loading...</div>;
 
   return (
     <>
       <Navbar />
       <div>
         <h2 className="text-center mt-3">Posted Recipes</h2>
-        <div className="container-fluid mt-5 ">
+        <div className="container-fluid mt-3 ">
           {recipes?.length > 0 ? (
             <div className="row row-cols-sm-1 justify-content-center">
               {recipes

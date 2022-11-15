@@ -22,7 +22,7 @@ const CardLayout = ({ recipes, searchTerm, userId, handleLike }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="container-fluid mt-5 ">
+    <div className="container-fluid mt-3 ">
       <div className="recipe-wrapper row row-cols-sm-1 justify-content-center">
         {recipes
           // eslint-disable-next-line array-callback-return

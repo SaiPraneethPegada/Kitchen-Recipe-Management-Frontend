@@ -1,12 +1,13 @@
 import axios from "axios";
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { searchContext, url } from "../App";
+import { url } from "../App";
 import Navbar from "./Navbar";
 import CardLayout from "./CardLayout";
+import { RecipeState } from "../context/RecipesProvider";
 
 function Home() {
-  const [recipes, setRecipes] = useState([]);
+  // const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const token = sessionStorage.getItem("token");
@@ -15,33 +16,19 @@ function Home() {
   const userId = userDetails.id;
   const location = useLocation();
 
-  const { searchTerm } = useContext(searchContext);
+  const { recipes, getAllRecipes, searchTerm, getFavRecipes } = RecipeState();
 
   const getData = async () => {
-    setLoading(true);
     if (location.pathname === "/home") {
-      const res = await axios.get(`${url}/users/allRecipes`);
-      // console.log(res.data.recipes);
-      if (res.data.statusCode === 200) {
-        setRecipes(res.data.recipes);
-      } else {
-        alert("Error in Fetching Data");
-      }
+      setLoading(true);
+      getAllRecipes();
+      setLoading(false);
     } else if (location.pathname === "/favorites") {
-      const res = await axios.get(`${url}/users/favRecipes`, {
-        headers: { Authorization: `${token}` },
-      });
-      // console.log(res);
-      if (res.data.statusCode === 200) {
-        setRecipes(res.data.fav);
-      } else {
-        alert("Error in Fetching Data");
-      }
+      setLoading(true);
+      getFavRecipes();
+      setLoading(false);
     }
-    setLoading(false);
   };
-
-  // console.log(recipes);
 
   const handleLike = async (id) => {
     const res = await axios.patch(
@@ -61,7 +48,7 @@ function Home() {
   useEffect(() => {
     getData();
     // eslint-disable-next-line
-  }, [location.pathname]);
+  }, [location.pathname, token]);
 
   // console.log(recipes);
   if (!token) return <div> Please Login...</div>;
@@ -70,6 +57,9 @@ function Home() {
   return (
     <>
       <Navbar />
+      <h2 className="mb-0 pb-0 text-center mt-2">
+        {location.pathname === "/favorites" ? "Favorite Recipes" : ""}
+      </h2>
       <CardLayout
         recipes={recipes}
         searchTerm={searchTerm}

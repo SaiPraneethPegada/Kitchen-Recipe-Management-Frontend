@@ -1,17 +1,18 @@
 import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import Navbar from "../Navbar";
 import Spinner from "react-bootstrap/Spinner";
-import { url, profileContext } from "../../App";
+import { url } from "../../App";
 import "../../App.css";
+import { RecipeState } from "../../context/RecipesProvider";
 
 export default function Profile() {
   const token = sessionStorage.getItem("token");
   const [userName, setUserName] = useState("");
   const [nameEdit, setNameEdit] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { profile, getProfile } = useContext(profileContext);
+  const { profile, getProfile } = RecipeState();
 
   // console.log(profile);
 
