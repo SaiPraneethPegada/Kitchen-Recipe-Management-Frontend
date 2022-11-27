@@ -1,11 +1,8 @@
 # Kitchen Recipe Management
 
-> Deployed URL - https://kitchen-recipe-management-fe.netlify.app
+## [Live Website](https://kitchen-recipe-management-fe.netlify.app) | [Backend Source_code](https://github.com/SaiPraneethPegada/Kitchen-Recipe-Management-Backend.git)
 
-> Backend Source code - https://github.com/SaiPraneethPegada/Kitchen-Recipe-Management-Backend.git
+    Demo Login Credentials: 
 
-
-Sample Login Credentials: 
-
-    Email: guest@gmail.com 
-    Password: Guest@123
+        Email: guest@guest.com 
+        Password: Guest@123
