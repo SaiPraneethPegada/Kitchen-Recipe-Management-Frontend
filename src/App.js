@@ -11,7 +11,7 @@ import Signup from "./components/Auth/Signup";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.css";
 export const CLIENT_URL = "https://kitchen-recipe-management-fe.netlify.app";
-export const url = "https://kitchen-recipe-management-be.herokuapp.com";
+export const url = "https://kitchen-recipe-api.onrender.com";
 // export const url = "http://localhost:8000";
 
 function App() {
